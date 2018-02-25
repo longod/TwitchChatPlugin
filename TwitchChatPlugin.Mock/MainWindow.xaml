@@ -1,0 +1,16 @@
+﻿<Window x:Class="TwitchChatPlugin.Mock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TwitchChatPlugin.Mock"
+        mc:Ignorable="d" FontFamily="Segoe UI"
+        Title="Controller" Width="320" Height="240">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel>
+            <Button>Connect</Button>
+            <Button>Disconnect</Button>
+            <Button Click="Button_Click">Settings Window</Button>
+        </StackPanel>
+    </Grid>
+</Window>
