@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
-
+using System.Text;
 
 namespace TwitchChatPlugin {
     // https://www.codeproject.com/Articles/769741/Csharp-AES-bits-Encryption-Library-with-Salt
+    /// <summary>
+    /// Encrypt / Decrypt
+    /// </summary>
+    [Obsolete]
     static internal class Cryptography {
-        static readonly byte[] saltBytes = { 0x74, 0x77, 0x69, 0x74, 0x63, 0x68, 0x74, 0x76 };
+        static readonly byte[] saltBytes = { 0x74, 0x77, 0x69, 0x74, 0x63, 0x68, 0x74, 0x76 }; // 8 bytes
         static readonly int keySizes = 256;
         static readonly int blockSize = 128;
 
@@ -89,12 +89,12 @@ namespace TwitchChatPlugin {
         }
 
         static internal string Encrypt( string input ) {
-            var attr = (System.Runtime.InteropServices.GuidAttribute)Attribute.GetCustomAttribute( System.Reflection.Assembly.GetExecutingAssembly(), typeof( System.Runtime.InteropServices.GuidAttribute ) );
-            return Encrypt( input, attr.Value );
+            string passphrase = "J5q;g<f*~Gj-YH/YYn~nC-6L+^c_ttX-";
+            return Encrypt( input, passphrase );
         }
         static internal string Decrypt( string input ) {
-            var attr = (System.Runtime.InteropServices.GuidAttribute)Attribute.GetCustomAttribute( System.Reflection.Assembly.GetExecutingAssembly(), typeof( System.Runtime.InteropServices.GuidAttribute ) );
-            return Decrypt( input, attr.Value );
+            string passphrase = "J5q;g<f*~Gj-YH/YYn~nC-6L+^c_ttX-";
+            return Decrypt( input, passphrase );
         }
     }
 }

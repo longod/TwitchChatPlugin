@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TwitchLib;
-using TwitchLib.Models.Client;
+﻿using TwitchLib;
 using TwitchLib.Events.Client;
-using Yukarinette; // wrap and exclude
+using TwitchLib.Models.Client;
+using Yukarinette; // wrap logger and exclude
 
 namespace TwitchChatPlugin {
+    /// <summary>
+    /// Client of TwitchChat
+    /// </summary>
     internal class ChatClient {
-        public ChatClient( string username, string oauth, double latency, string proxyIP = null, int? proxyPort = null, bool dryRun = false ) {
+        internal ChatClient( string username, string oauth, double latency, string proxyIP = null, int? proxyPort = null, bool dryRun = false ) {
             crentials = new ConnectionCredentials(
                 twitchUsername: username,
                 twitchOAuth: oauth,
                 proxyIP: proxyIP, 
                 proxyPort: proxyPort );
-            client = new TwitchClient( crentials, username, logging: false );
+            client = new TwitchClient( crentials, username, logging: false );  // channnel is same as username.
             client.OnConnected += Client_OnConnected;
             client.OnDisconnected += Client_OnDisconnected;
             client.OnLog += Client_OnLog;
@@ -54,19 +52,19 @@ namespace TwitchChatPlugin {
             }
         }
 
-        private void Client_OnConnected( object sender, OnConnectedArgs e ) {
+        void Client_OnConnected( object sender, OnConnectedArgs e ) {
             YukarinetteLogger.Instance.Info( $"{e.BotUsername} connected in Twitch chat." );
         }
 
-        private void Client_OnDisconnected( object sender, OnDisconnectedArgs e ) {
+        void Client_OnDisconnected( object sender, OnDisconnectedArgs e ) {
             YukarinetteLogger.Instance.Info( $"{e.BotUsername} disconnected in Twitch chat." );
         }
 
-        private void Client_OnLog( object sender, OnLogArgs e ) {
+        void Client_OnLog( object sender, OnLogArgs e ) {
             //YukarinetteLogger.Instance.Info( e.Data );
         }
 
-        private void Client_OnConnectionError( object sender, OnConnectionErrorArgs e ) {
+        void Client_OnConnectionError( object sender, OnConnectionErrorArgs e ) {
             YukarinetteLogger.Instance.Error( e.Error );
         }
 
