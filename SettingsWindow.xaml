@@ -23,7 +23,7 @@
                     <Label Grid.Row="1" Grid.Column="0" Content="OAuth:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     <PasswordBox Grid.Row="1" Grid.Column="1" Name="passwordboxOAuth" Password="" Margin="2" MaxLength="255" ></PasswordBox>
                 </Grid>
-                <TextBlock>How to get OAuth? Visit to <Hyperlink NavigateUri="https://github.com/longod/TwitchChatPlugin/wiki" RequestNavigate="Hyperlink_RequestNavigate">TwitchChatPlugin on GitHub</Hyperlink>.</TextBlock>
+                <TextBlock>How to get OAuth? Visit to <Hyperlink NavigateUri="https://github.com/longod/TwitchChatPlugin/wiki/OAuth" RequestNavigate="Hyperlink_RequestNavigate">TwitchChatPlugin on GitHub</Hyperlink>.</TextBlock>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Chat" IsEnabled="False">
