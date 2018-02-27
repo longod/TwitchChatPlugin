@@ -12,7 +12,7 @@
 [TwitchChatPlugin][1] is a [Yukarinette][2] plugin.  
 This sends speech recognition results to [Twitch][3]'s chat in your channel.
 
-English version is [below](#Installation).
+English version is [below](#installation).
 
 # インストール
 
@@ -31,7 +31,7 @@ English version is [below](#Installation).
 1. プラグインメニューを選択する
 1. TwitchChatPlugin を探す
 1. 設定を開く
-1. Twitchのユーザ名とOAuth（[後述](#Getting-OAuth)）を入力し、OKを押す
+1. Twitchのユーザ名とOAuth（[後述](#getting-oauth)）を入力し、OKを押す
 1. 音声認識メニューから TwitchChatPlugin を有効にする
 1. 開始する
 
@@ -69,7 +69,7 @@ English version is [below](#Installation).
 1. Click Plugin menu.
 1. Find TwitchChatPlugin.
 1. Open Settings.
-1. Enter Twitch username and OAuth ([below seciton](#Getting-OAuth)), then OK.
+1. Enter Twitch username and OAuth ([below seciton](#getting-oauth)), then OK.
 1. Enable TwitchChatPlugin
 1. Start Recognition
 
