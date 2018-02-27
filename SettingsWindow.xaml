@@ -26,7 +26,7 @@
                 <TextBlock>How to get OAuth? Visit to <Hyperlink NavigateUri="https://github.com/longod/TwitchChatPlugin/wiki/OAuth" RequestNavigate="Hyperlink_RequestNavigate">TwitchChatPlugin on GitHub</Hyperlink>.</TextBlock>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Chat" IsEnabled="False">
+        <GroupBox Header="Chat (later)" IsEnabled="False">
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>

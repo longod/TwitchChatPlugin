@@ -43,10 +43,10 @@ namespace TwitchChatPlugin {
             if ( string.IsNullOrEmpty( passphrase ) ) {
                 return null;
             }
-            byte[] salt = GenerateRandom( sizeInBytes );
-            byte[] iv = GenerateRandom( sizeInBytes );
+            byte[] salt = GenerateRandom( keyBytes );
+            byte[] iv = GenerateRandom( keyBytes );
             using ( var password = new Rfc2898DeriveBytes( passphrase, salt, derivationIterations ) ) {
-                byte[] keyBytes = password.GetBytes( sizeInBytes ); 
+                byte[] keyBytes = password.GetBytes( Cryptography.keyBytes ); 
                 using ( var symmetricKey = new RijndaelManaged() ) {
                     symmetricKey.KeySize = keyBits;
                     symmetricKey.BlockSize = blockBits;
@@ -68,19 +68,19 @@ namespace TwitchChatPlugin {
         }
 
         static byte[] Decrypt( byte[] bin, string passphrase ) {
-            if ( bin == null || bin.Length < sizeInBytes * 2 ) {
+            if ( bin == null || bin.Length < keyBytes * 2 ) {
                 return null;
             }
             if ( string.IsNullOrEmpty( passphrase ) ) {
                 return null;
             }
             using ( var ms = new MemoryStream( bin ) ) {
-                byte[] salt = new byte[ sizeInBytes ];
-                ms.Read( salt, 0, sizeInBytes );
-                byte[] iv = new byte[ sizeInBytes ];
-                ms.Read( iv, 0, sizeInBytes );
+                byte[] salt = new byte[ keyBytes ];
+                ms.Read( salt, 0, keyBytes );
+                byte[] iv = new byte[ keyBytes ];
+                ms.Read( iv, 0, keyBytes );
                 using ( var password = new Rfc2898DeriveBytes( passphrase, salt, derivationIterations ) ) {
-                    var keyBytes = password.GetBytes( sizeInBytes );
+                    var keyBytes = password.GetBytes( Cryptography.keyBytes );
                     using ( var symmetricKey = new RijndaelManaged() ) {
                         symmetricKey.KeySize = keyBits;
                         symmetricKey.BlockSize = blockBits;
@@ -116,6 +116,6 @@ namespace TwitchChatPlugin {
         static readonly int derivationIterations = 1000;
         static readonly int keyBits = 256; // AES=128, Rijndael=256
         static readonly int blockBits = 256;
-        static readonly int sizeInBytes = keyBits / 8; // 32 Bytes will give us 256 bits.
+        static readonly int keyBytes = keyBits / 8; // 32 Bytes will give us 256 bits.
     }
 }
