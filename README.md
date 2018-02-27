@@ -102,7 +102,7 @@ For details, see [here](https://github.com/longod/TwitchChatPlugin/wiki/OAuth).
 * [TwitchLib](https://github.com/TwitchLib/TwitchLib)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 
-## Website
+## Websites
 
 * [Black Masquerade Games](http://blackmasqueradegames.com)
 * [TwitchChatPlugin](https://github.com/longod/TwitchChatPlugin)
