@@ -4,97 +4,118 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace TwitchChatPlugin {
-    // https://www.codeproject.com/Articles/769741/Csharp-AES-bits-Encryption-Library-with-Salt
     /// <summary>
     /// Encrypt / Decrypt
     /// </summary>
-    [Obsolete]
-    static internal class Cryptography {
-        static readonly byte[] saltBytes = { 0x74, 0x77, 0x69, 0x74, 0x63, 0x68, 0x74, 0x76 }; // 8 bytes
-        static readonly int keySizes = 256;
-        static readonly int blockSize = 128;
+    internal static class Cryptography {
 
-        static byte[] Encrypt( byte[] bytesToBeEncrypted, byte[] passwordBytes ) {
-            if ( bytesToBeEncrypted == null || bytesToBeEncrypted.Length == 0 ) {
-                return null;
-            }
-            if ( passwordBytes == null || passwordBytes.Length == 0 ) {
-                return null;
-            }
-            byte[] encryptedBytes = null;
-            using ( var ms = new MemoryStream() ) {
-                using ( var m = new RijndaelManaged() ) {
-                    m.KeySize = keySizes;
-                    m.BlockSize = blockSize;
-                    var key = new Rfc2898DeriveBytes( passwordBytes, saltBytes, 1000 );
-                    m.Key = key.GetBytes( m.KeySize / 8 );
-                    m.IV = key.GetBytes( m.BlockSize / 8 );
-                    m.Mode = CipherMode.CBC;
-                    using ( var cs = new CryptoStream( ms, m.CreateEncryptor(), CryptoStreamMode.Write ) ) {
-                        cs.Write( bytesToBeEncrypted, 0, bytesToBeEncrypted.Length );
-                        cs.Close();
-                    }
-                    encryptedBytes = ms.ToArray();
-                }
-            }
-            return encryptedBytes;
-        }
-        static byte[] Decrypt( byte[] bytesToBeDecrypted, byte[] passwordBytes ) {
-            if ( bytesToBeDecrypted == null || bytesToBeDecrypted.Length == 0 ) {
-                return null;
-            }
-            if ( passwordBytes == null || passwordBytes.Length == 0 ) {
-                return null;
-            }
-            byte[] decryptedBytes = null;
-            using ( MemoryStream ms = new MemoryStream() ) {
-                using ( RijndaelManaged m = new RijndaelManaged() ) {
-                    m.KeySize = keySizes;
-                    m.BlockSize = blockSize;
-                    var key = new Rfc2898DeriveBytes( passwordBytes, saltBytes, 1000 );
-                    m.Key = key.GetBytes( m.KeySize / 8 );
-                    m.IV = key.GetBytes( m.BlockSize / 8 );
-                    m.Mode = CipherMode.CBC;
-                    using ( var cs = new CryptoStream( ms, m.CreateDecryptor(), CryptoStreamMode.Write ) ) {
-                        cs.Write( bytesToBeDecrypted, 0, bytesToBeDecrypted.Length );
-                        cs.Close();
-                    }
-                    decryptedBytes = ms.ToArray();
-                }
-            }
-            return decryptedBytes;
-        }
-
-        static internal string Encrypt( string input, string password ) {
-            if ( string.IsNullOrEmpty( input ) || string.IsNullOrWhiteSpace( password ) ) {
-                return null;
-            }
-            byte[] bytesToBeEncrypted = Encoding.UTF8.GetBytes( input );
-            byte[] passwordBytes = Encoding.UTF8.GetBytes( password );
-            passwordBytes = SHA256.Create().ComputeHash( passwordBytes );
-            byte[] bytesEncrypted = Encrypt( bytesToBeEncrypted, passwordBytes );
-            string result = Convert.ToBase64String( bytesEncrypted );
-            return result;
-        }
-        static internal string Decrypt( string input, string password ) {
-            if ( string.IsNullOrEmpty( input ) || string.IsNullOrWhiteSpace( password ) ) {
-                return null;
-            }
-            byte[] bytesToBeDecrypted = Convert.FromBase64String( input );
-            byte[] passwordBytes = Encoding.UTF8.GetBytes( password );
-            passwordBytes = SHA256.Create().ComputeHash( passwordBytes );
-            byte[] bytesDecrypted = Decrypt( bytesToBeDecrypted, passwordBytes );
-            string result = Encoding.UTF8.GetString( bytesDecrypted );
-            return result;
-        }
-
-        static internal string Encrypt( string input ) {
-            string passphrase = "J5q;g<f*~Gj-YH/YYn~nC-6L+^c_ttX-";
+        internal static string Encrypt( string input ) {
+            string passphrase = @"Eg2%p!SByvaM-ZpnXWa[6Ly)y%}#]4a\AcWc4}[)9&*#Z%ZraD8::h\MVLF=2F5>";
             return Encrypt( input, passphrase );
         }
-        static internal string Decrypt( string input ) {
-            string passphrase = "J5q;g<f*~Gj-YH/YYn~nC-6L+^c_ttX-";
+        internal static string Decrypt( string input ) {
+            string passphrase = @"Eg2%p!SByvaM-ZpnXWa[6Ly)y%}#]4a\AcWc4}[)9&*#Z%ZraD8::h\MVLF=2F5>";
             return Decrypt( input, passphrase );
         }
+
+        internal static string Encrypt( string plaintext, string passphrase ) {
+            if ( string.IsNullOrEmpty( plaintext ) || string.IsNullOrEmpty( passphrase ) ) {
+                return null;
+            }
+            var bin = Encoding.UTF8.GetBytes( plaintext );
+            var encrypted = Encrypt( bin, passphrase );
+            return Convert.ToBase64String( encrypted );
+        }
+
+        internal static string Decrypt( string base64, string passphrase ) {
+            if ( string.IsNullOrEmpty( base64 ) || string.IsNullOrEmpty( passphrase ) ) {
+                return null;
+            }
+            var bin = Convert.FromBase64String( base64 );
+            var decrypted = Decrypt( bin, passphrase );
+            return Encoding.UTF8.GetString( decrypted );
+        }
+
+        static byte[] Encrypt( byte[] bin, string passphrase ) {
+            if ( bin == null || bin.Length == 0 ) {
+                return null;
+            }
+            if ( string.IsNullOrEmpty( passphrase ) ) {
+                return null;
+            }
+            byte[] salt = GenerateRandom( sizeInBytes );
+            byte[] iv = GenerateRandom( sizeInBytes );
+            using ( var password = new Rfc2898DeriveBytes( passphrase, salt, derivationIterations ) ) {
+                byte[] keyBytes = password.GetBytes( sizeInBytes ); 
+                using ( var symmetricKey = new RijndaelManaged() ) {
+                    symmetricKey.KeySize = keyBits;
+                    symmetricKey.BlockSize = blockBits;
+                    symmetricKey.Mode = mode;
+                    symmetricKey.Padding = padding;
+                    using ( var encryptor = symmetricKey.CreateEncryptor( keyBytes, iv ) ) {
+                        using ( var ms = new MemoryStream() ) {
+                            ms.Write( salt, 0, salt.Length );
+                            ms.Write( iv, 0, iv.Length );
+                            using ( var cryptoStream = new CryptoStream( ms, encryptor, CryptoStreamMode.Write ) ) {
+                                cryptoStream.Write( bin, 0, bin.Length );
+                                cryptoStream.FlushFinalBlock();
+                                return ms.ToArray();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static byte[] Decrypt( byte[] bin, string passphrase ) {
+            if ( bin == null || bin.Length < sizeInBytes * 2 ) {
+                return null;
+            }
+            if ( string.IsNullOrEmpty( passphrase ) ) {
+                return null;
+            }
+            using ( var ms = new MemoryStream( bin ) ) {
+                byte[] salt = new byte[ sizeInBytes ];
+                ms.Read( salt, 0, sizeInBytes );
+                byte[] iv = new byte[ sizeInBytes ];
+                ms.Read( iv, 0, sizeInBytes );
+                using ( var password = new Rfc2898DeriveBytes( passphrase, salt, derivationIterations ) ) {
+                    var keyBytes = password.GetBytes( sizeInBytes );
+                    using ( var symmetricKey = new RijndaelManaged() ) {
+                        symmetricKey.KeySize = keyBits;
+                        symmetricKey.BlockSize = blockBits;
+                        symmetricKey.Mode = mode;
+                        symmetricKey.Padding = padding;
+                        using ( var decryptor = symmetricKey.CreateDecryptor( keyBytes, iv ) ) {
+                            using ( var cryptoStream = new CryptoStream( ms, decryptor, CryptoStreamMode.Read ) ) {
+                                using ( var os = new MemoryStream() ) {
+                                    byte[] temp = new byte[ 4096 ];
+                                    int len = 0;
+                                    while ( ( len = cryptoStream.Read( temp, 0, temp.Length ) ) > 0 ) {
+                                        os.Write( temp, 0, len );
+                                    }
+                                    return os.ToArray();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static byte[] GenerateRandom( int size ) {
+            using ( var rngCsp = new RNGCryptoServiceProvider() ) {
+                byte[] randomBytes = new byte[ size ];
+                rngCsp.GetBytes( randomBytes );
+                return randomBytes;
+            }
+        }
+
+        static readonly CipherMode mode = CipherMode.CBC;
+        static readonly PaddingMode padding = PaddingMode.PKCS7;
+        static readonly int derivationIterations = 1000;
+        static readonly int keyBits = 256; // AES=128, Rijndael=256
+        static readonly int blockBits = 256;
+        static readonly int sizeInBytes = keyBits / 8; // 32 Bytes will give us 256 bits.
     }
 }
