@@ -100,6 +100,7 @@ For details, see [here](https://github.com/longod/TwitchChatPlugin/wiki/OAuth).
 * [Yukarinette][2]
 * [Twitch][3]
 * [TwitchLib](https://github.com/TwitchLib/TwitchLib)
+* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 
 ## Website
 
