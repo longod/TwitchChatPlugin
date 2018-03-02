@@ -18,7 +18,7 @@ namespace TwitchChatPlugin {
             sliderLatency.Value = settings.Latency;
             checkboxEnableProxy.IsChecked = settings.enableProxy;
             textboxAddress.Text = settings.proxyIP;
-            textboxAddress.Text = settings.proxyPort;
+            textboxPort.Text = settings.proxyPort;
             return ShowDialog().Value;
         }
 
