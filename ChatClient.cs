@@ -72,5 +72,7 @@ namespace TwitchChatPlugin {
         TwitchClient client = null;
         double latency = 10.0;
         bool dryRun = false;
+
+        object lockObject = new object();
     }
 }

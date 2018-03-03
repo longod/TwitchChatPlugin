@@ -55,7 +55,7 @@
                     <Label Grid.Row="0" Grid.Column="0" Content="Address:" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     <TextBox Grid.Row="0" Grid.Column="1" Name="textboxAddress" TextWrapping="Wrap" IsEnabled="{Binding ElementName=checkboxEnableProxy, Path=IsChecked}" Text="" Margin="2" MaxLength="255"/>
                     <Label Grid.Row="1" Grid.Column="0" Content="Port:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Name="textboxPort" TextWrapping="Wrap" IsEnabled="{Binding ElementName=checkboxEnableProxy, Path=IsChecked}" Text="" Margin="2" MaxLength="255"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Name="textboxPort" TextWrapping="Wrap" IsEnabled="{Binding ElementName=checkboxEnableProxy, Path=IsChecked}" Text="" Margin="2" MaxLength="5" local:TextBoxValidator.IsNumeric="True" />
                 </Grid>
             </StackPanel>
         </GroupBox>
