@@ -5,12 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwitchChatPlugin.Mock"
         mc:Ignorable="d" FontFamily="Segoe UI"
-        Title="Controller" Width="320" Height="240">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel>
-            <Button>Connect</Button>
-            <Button>Disconnect</Button>
-            <Button Click="Button_Click">Settings Window</Button>
+        Title="TwitchChatPlugin Controller" Width="480" Height="360">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Margin="8" Click="Connect_Click">Connect</Button>
+                <Button Grid.Column="1" Margin="8" Click="Disconnect_Click">Disconnect</Button>
+                <Button Grid.Column="2" Margin="8" Click="Settings_Click">Settings</Button>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Name="textboxSend" Margin="8"/>
+                <Button Grid.Column="1" Margin="8" Click="Send_Click">Send</Button>
+            </Grid>
         </StackPanel>
+        <TextBox Grid.Row="1" Height="Auto" IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
     </Grid>
 </Window>

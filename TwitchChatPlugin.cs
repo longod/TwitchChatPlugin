@@ -35,13 +35,11 @@ namespace TwitchChatPlugin {
         }
 
         public override void Speech( string text ) {
-            if ( client != null ) {
-                // どこかの段階で末尾についているが、日本語の喋りの慣習的に句読点はあまり重要ではないので除去する
-                if ( text.EndsWith( "." ) ) {
-                    text = text.Remove( text.Length - 1 );
-                }
-                client.SendMessage( text );
+            // どこかの段階で末尾についているが、日本語の喋りの慣習的に句読点はあまり重要ではないので除去する
+            if ( text.EndsWith( "." ) ) {
+                text = text.Remove( text.Length - 1 );
             }
+            client?.EnqueueMessage( text );
         }
 
         public override void Setting() {

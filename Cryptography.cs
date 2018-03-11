@@ -9,6 +9,7 @@ namespace TwitchChatPlugin {
     /// </summary>
     internal static class Cryptography {
 
+        // 意味あるのかこれ
         internal static string Encrypt( string input ) {
             string passphrase = @"Eg2%p!SByvaM-ZpnXWa[6Ly)y%}#]4a\AcWc4}[)9&*#Z%ZraD8::h\MVLF=2F5>";
             return Encrypt( input, passphrase );

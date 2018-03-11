@@ -26,7 +26,7 @@
                 <TextBlock>How to get OAuth? Visit to <Hyperlink NavigateUri="https://github.com/longod/TwitchChatPlugin/wiki/OAuth" RequestNavigate="Hyperlink_RequestNavigate">TwitchChatPlugin on GitHub</Hyperlink>.</TextBlock>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Chat (later)" IsEnabled="False">
+        <GroupBox Header="Chat">
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -55,7 +55,7 @@
                     <Label Grid.Row="0" Grid.Column="0" Content="Address:" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     <TextBox Grid.Row="0" Grid.Column="1" Name="textboxAddress" TextWrapping="Wrap" IsEnabled="{Binding ElementName=checkboxEnableProxy, Path=IsChecked}" Text="" Margin="2" MaxLength="255"/>
                     <Label Grid.Row="1" Grid.Column="0" Content="Port:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Name="textboxPort" TextWrapping="Wrap" IsEnabled="{Binding ElementName=checkboxEnableProxy, Path=IsChecked}" Text="" Margin="2" MaxLength="255"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Name="textboxPort" TextWrapping="Wrap" IsEnabled="{Binding ElementName=checkboxEnableProxy, Path=IsChecked}" Text="" Margin="2" MaxLength="5" local:TextBoxValidator.IsNumeric="True" />
                 </Grid>
             </StackPanel>
         </GroupBox>
