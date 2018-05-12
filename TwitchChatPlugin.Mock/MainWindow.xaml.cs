@@ -7,6 +7,7 @@ namespace TwitchChatPlugin.Mock {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
+            DataContext = this;
         }
 
         private void Settings_Click( object sender, RoutedEventArgs e ) {
@@ -22,7 +23,7 @@ namespace TwitchChatPlugin.Mock {
             if ( settings == null ) {
                 settings = Settings.Load( Settings.Filename );
             }
-            client = new ChatClient( settings.username, Cryptography.Decrypt( settings.oauth ), settings.Latency, settings.ProxyIP, settings.Port, true );
+            client = new ChatClient( settings.username, Cryptography.Decrypt( settings.oauth ), settings.Latency, settings.ProxyIP, settings.Port, DryRun, logger: new ConsoleLogger() );
             client?.Connect();
         }
 
@@ -33,6 +34,7 @@ namespace TwitchChatPlugin.Mock {
 
         ChatClient client = null;
         Settings settings = null;
+        public bool DryRun { get; set; } = true;
 
         private void Send_Click( object sender, RoutedEventArgs e ) {
             string text = textboxSend.Text;
