@@ -1,11 +1,10 @@
 ﻿using System.Windows;
-using Yukarinette;
 
 namespace TwitchChatPlugin {
     /// <summary>
     /// 
     /// </summary>
-    public class Plugin : IYukarinetteInterface {
+    public class Plugin : Yukarinette.IYukarinetteInterface {
         public override string Name {
             get {
                 return "Twitch Chat";
@@ -25,7 +24,7 @@ namespace TwitchChatPlugin {
 
         public override void SpeechRecognitionStart() {
             // recreate every time
-            client = new ChatClient( settings.username, Cryptography.Decrypt( settings.oauth ), settings.Latency, settings.ProxyIP, settings.Port );
+            client = new ChatClient( settings.username, Cryptography.Decrypt( settings.oauth ), settings.Latency, settings.ProxyIP, settings.Port, logger: new YukarinetteLogger() );
             client?.Connect();
         }
 

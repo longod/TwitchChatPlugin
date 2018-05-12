@@ -10,7 +10,7 @@ namespace TwitchChatPlugin {
     /// Client of TwitchChat
     /// </summary>
     internal class ChatClient {
-        internal ChatClient( string username, string oauth, double latency, string proxyIP = null, int? proxyPort = null, bool dryRun = false ) {
+        internal ChatClient( string username, string oauth, double latency, string proxyIP = null, int? proxyPort = null, bool dryRun = false, ILogger logger = null ) {
             crentials = new ConnectionCredentials(
                 twitchUsername: username,
                 twitchOAuth: oauth,
@@ -23,10 +23,11 @@ namespace TwitchChatPlugin {
             client.OnConnectionError += Client_OnConnectionError;
             this.latency = latency;
             this.dryRun = dryRun;
+            this.logger = logger;
         }
 
         #region client operation
-        internal bool IsConnected {
+        bool IsConnected {
             get {
                 lock ( lockObject ) {
                     if ( client.IsConnected ) {
@@ -41,7 +42,7 @@ namespace TwitchChatPlugin {
             // threadでやってもいいけれど、例外が発生して処理しなくてはならないならこっちだろう
             lock ( lockObject ) {
                 if ( !client.IsConnected ) {
-                    //YukarinetteLogger.Instance.Info( "connecting..." );
+                    logger?.Log( "Connecting..." );
                     client.Connect();
                 }
             }
@@ -64,7 +65,7 @@ namespace TwitchChatPlugin {
             // threadでやってもいいけれど…
             lock ( lockObject ) {
                 if ( client.IsConnected ) {
-                    //YukarinetteLogger.Instance.Info( "disconnecting..." );
+                    logger?.Log( "disconnecting..." );
                     client.Disconnect();
                 }
             }
@@ -81,24 +82,25 @@ namespace TwitchChatPlugin {
 
         #region Callbacks
         void Client_OnConnected( object sender, OnConnectedArgs e ) {
-            //YukarinetteLogger.Instance.Info( $"{e.BotUsername} connected in Twitch chat." );
+            logger?.Log( $"{e.BotUsername} connected in Twitch chat." );
         }
 
         void Client_OnDisconnected( object sender, OnDisconnectedArgs e ) {
-            //YukarinetteLogger.Instance.Info( $"{e.BotUsername} disconnected in Twitch chat." );
+            logger?.Log( $"{e.BotUsername} disconnected in Twitch chat." );
         }
 
         void Client_OnLog( object sender, OnLogArgs e ) {
-            //YukarinetteLogger.Instance.Info( e.Data );
+            logger?.Log( e.Data );
         }
 
         void Client_OnConnectionError( object sender, OnConnectionErrorArgs e ) {
-            //YukarinetteLogger.Instance.Error( e.Error );
+            logger?.Error( e.Error.Message );
         }
         #endregion
 
 
         internal void EnqueueMessage( string text ) {
+            logger?.Debug( text );
             queue?.Enqueue( new Job { date = DateTime.Now, text = text } );
         }
 
@@ -150,6 +152,7 @@ namespace TwitchChatPlugin {
         readonly double latency = 10.0;
         readonly bool dryRun = false;
 
+        // TwitchClientは、thread-safeな可能性はあるが、ざっと見た限りそうではないし、明記されていないのでこれを用いてlockする
         object lockObject = new object();
 
         struct Job {
@@ -162,5 +165,6 @@ namespace TwitchChatPlugin {
         Thread thread = null;
         volatile bool terminateThread = false;
 
+        ILogger logger = null;
     }
 }

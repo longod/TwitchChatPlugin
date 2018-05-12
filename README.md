@@ -110,16 +110,8 @@ For details, see [here](https://github.com/longod/TwitchChatPlugin/wiki/OAuth).
 
 ## TODO
 
-* write docs how to use and revoke authorization
-* latency for streaming lag
-* allow only numeric on port text field
-* spam limitation (20 or 100 times per 30 seconds)
 * bad word filtering
-* more security
 * catch exceptions
-* coverage mock and test
-    * wrap logger for testing
-    * using dry-run
 
 # License
 
